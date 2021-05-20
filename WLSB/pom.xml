@@ -14,7 +14,7 @@
 	<name>WLSB</name>
 	<description>Work-Life-Sleep-Balance App for SE3</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>12</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
