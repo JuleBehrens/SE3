@@ -22,7 +22,7 @@ public class RequestHandler {
     /**
 	 * Handles Get-Requests to /api/schedule
      * <p>
-	 * Determines a schedule for a typical Homeoffice day with the given parameters
+	 * Determines a schedule through a schedule {@Link #Schedule.Schedule(boolean, int, boolean, String, String, String)} object for a typical Homeoffice day with the given parameters
 	 * 
 	 * @param nap boolean, true if a nap should be scheduled
 	 * @param age int, age of the person of the 
