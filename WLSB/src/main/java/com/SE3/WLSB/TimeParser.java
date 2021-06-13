@@ -1,4 +1,4 @@
-package com.SE3;
+package com.SE3.WLSB;
 
 import java.time.Duration;
 
