@@ -3,13 +3,12 @@ package com.SE3.WLSB;
 import java.time.Duration;
 /**
  * Class to model a schedule, objects cannot be changed
- * <p>
+ * <br>
  * Through constructor a validation and determination of the schedule is triggered
- * <p>
+ * <br>
  * Schedule can be accessed via a method {@link #toString()} 
- * <p>
+ * <br>
  * Status can be accessed via method {@link #getStatus()} (1: ok, 2: not enough sleep, 3: no determination possible)
- * 
  */
 
 public class Schedule {
