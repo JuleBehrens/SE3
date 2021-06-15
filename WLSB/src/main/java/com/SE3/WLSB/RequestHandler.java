@@ -1,7 +1,5 @@
 package com.SE3.WLSB;
 
-import java.time.Duration;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
