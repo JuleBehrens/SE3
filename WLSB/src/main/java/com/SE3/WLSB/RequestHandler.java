@@ -2,6 +2,7 @@ package com.SE3.WLSB;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -14,7 +15,7 @@ public class RequestHandler {
      * @return links to navigate through api
      */
     @GetMapping("/api")
-	public String api() {
+	public @ResponseBody String api() {
 		return "{\"_links\": {\"self\": \"/api\",\"schedule\": \"/api/schedule\"}}";
 	}
     /**
@@ -31,7 +32,7 @@ public class RequestHandler {
 	 * @return the schedule in JSON-Format and a status code (1: ok, 2: not enough sleep, 3: not possible to determine plan)
 	 */
 	@GetMapping("/api/schedule")
-	public String schedule (@RequestParam(value = "nap") boolean nap, 
+	public @ResponseBody String schedule (@RequestParam(value = "nap") boolean nap, 
 							@RequestParam(value = "age") int age,
 							@RequestParam(value = "breakfast") boolean breakfast, 
 							@RequestParam(value = "wakeUpTime") String wakeUpTime,
