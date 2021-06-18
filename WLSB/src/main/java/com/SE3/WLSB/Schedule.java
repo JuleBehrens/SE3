@@ -123,7 +123,7 @@ public class Schedule {
 
     private String addDurationToSchedule(String schedule, String identifier, Duration duration){
         if(duration != null){
-            schedule += String.format("{\"%s\":\"%s\"}​​​​​​​​​​​,", identifier, TimeParser.durationToString(duration));
+            schedule += String.format("{\"%s\":\"%s\"},", identifier, TimeParser.durationToString(duration));
         }
         return schedule;
     }
