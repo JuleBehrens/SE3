@@ -120,9 +120,9 @@ public class Schedule {
             schedule = addDurationToSchedule(schedule, eveningWorkString, eveningWork);
             schedule = addDurationToSchedule(schedule, eveningFreetimeString, eveningFreetime);
             schedule = addDurationToSchedule(schedule, sleepString, goToBed);
-            return schedule;
+            return schedule.substring(0, schedule.length()-1);
         }else {
-            return  "Schedule not possible";
+            return "Schedule not possible";
         }
  
     }
