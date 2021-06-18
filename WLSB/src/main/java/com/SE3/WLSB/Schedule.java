@@ -142,9 +142,9 @@ public class Schedule {
         determineMorningWork(remainingWorkingHours);
 		determineLunchBreak();
 		remainingWorkingHours = determineMorningFreetime(remainingWorkingHours);
-		Duration afternoon = lunchBreak.plus(breaks);
-	    determineDinner(afternoon);
+		Duration afternoon = lunchBreak.plus(breaks);  
 		afternoon = determineNap(afternoon);
+        determineDinner(afternoon);
 		remainingWorkingHours = determineAfternoonActivities(remainingWorkingHours, afternoon);
 		Duration sleeptime = wakeUpTime.minus(sleep).plus(Duration.ofHours(24));
         determineEveningActivities(remainingWorkingHours, sleeptime);
@@ -165,8 +165,6 @@ public class Schedule {
     }
 
     private void determineEveningActivities(Duration remainingWorkingHours, Duration sleeptime) {
-        eveningWork = null;
-        eveningFreetime = null;
 		if (!remainingWorkingHours.isZero()){
             eveningWork = dinner.plus(breaks);
 			Duration afterwork = dinner.plus(breaks).plus(remainingWorkingHours);
@@ -201,15 +199,17 @@ public class Schedule {
     private Duration determineAfternoonActivities(Duration remainingWorkingHours, Duration afternoon) {
         if (remainingWorkingHours.isZero()){
             afternoonFreetime = Duration.ofSeconds(afternoon.getSeconds());
-            afternoonWork = null;
 		}
 		else {
             afternoonWork = Duration.ofSeconds(afternoon.getSeconds());
-            afternoonFreetime = null;
-		    if (remainingWorkingHours.compareTo(Duration.ofHours(5)) < 0){
-                afternoonFreetime = afternoon.plus(remainingWorkingHours);
+		    if (remainingWorkingHours.compareTo(Duration.ofHours(5)) <= 0){
+                if (remainingWorkingHours.compareTo(Duration.ofHours(5)) < 0){
+                    afternoonFreetime = afternoon.plus(remainingWorkingHours);
+                }
 			    remainingWorkingHours = Duration.ZERO;
-			}
+			}else {
+                remainingWorkingHours = remainingWorkingHours.minus(Duration.ofHours(5));
+            }
 		}
         return remainingWorkingHours;
     }
