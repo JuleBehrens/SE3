@@ -1,6 +1,7 @@
 package com.SE3.WLSB;
 
 import java.time.Duration;
+
 /**
  * Class to model a schedule, objects cannot be changed
  * <br>
@@ -122,7 +123,7 @@ public class Schedule {
 
     private String addDurationToSchedule(String schedule, String identifier, Duration duration){
         if(duration != null){
-            schedule += String.format("{\"%s\": \"%s\"}​​​​​​​​​​​,", identifier, TimeParser.durationToString(duration));
+            schedule += String.format("{\"%s\":\"%s\"}​​​​​​​​​​​,", identifier, TimeParser.durationToString(duration));
         }
         return schedule;
     }
