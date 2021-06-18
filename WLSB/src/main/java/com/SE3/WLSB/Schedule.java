@@ -19,8 +19,12 @@ public class Schedule {
     private final int hoursOfSleepOver21 = 7;
     private final int hoursOfSleepUnder21 = 8;
     private final String wakeUpString = "wakeup";
-    private final String workString = "work";
-    private final String freetimeString = "freetime";
+    private final String morningWorkString = "morningWork";
+    private final String afternoonWorkString = "afternoonWork";
+    private final String eveningWorkString = "eveningWork";
+    private final String morningFreetimeString = "morningFreetime";
+    private final String afternoonFreetimeString = "afternoonFreetime";
+    private final String eveningFreetimeString = "eveningFreetime";
     private final String lunchString = "lunch";
     private final String dinnerString = "dinner";
     private final String napString = "nap";
@@ -106,15 +110,15 @@ public class Schedule {
         String schedule = "";
         if(status < 3){
             schedule = addDurationToSchedule(schedule, wakeUpString, wakeUpTime);
-            schedule = addDurationToSchedule(schedule, workString, morningWork);
-            schedule = addDurationToSchedule(schedule, freetimeString, morningFreetime);
+            schedule = addDurationToSchedule(schedule, morningWorkString, morningWork);
+            schedule = addDurationToSchedule(schedule, morningFreetimeString, morningFreetime);
             schedule = addDurationToSchedule(schedule, lunchString, lunchBreak);
 			schedule = addDurationToSchedule(schedule, napString, napTime);
-            schedule = addDurationToSchedule(schedule, workString, afternoonWork);
-            schedule = addDurationToSchedule(schedule, freetimeString, afternoonFreetime);
+            schedule = addDurationToSchedule(schedule, afternoonWorkString, afternoonWork);
+            schedule = addDurationToSchedule(schedule, afternoonFreetimeString, afternoonFreetime);
             schedule = addDurationToSchedule(schedule, dinnerString, dinner);
-            schedule = addDurationToSchedule(schedule, workString, eveningWork);
-            schedule = addDurationToSchedule(schedule, freetimeString, eveningFreetime);
+            schedule = addDurationToSchedule(schedule, eveningWorkString, eveningWork);
+            schedule = addDurationToSchedule(schedule, eveningFreetimeString, eveningFreetime);
             schedule = addDurationToSchedule(schedule, sleepString, goToBed);
             return schedule;
         }else {
