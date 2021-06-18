@@ -69,7 +69,9 @@ public class Schedule {
 	    this.workingHours = TimeParser.stringToDuration(workingHours);
 		determineSleepDuration();
         checkIfActivitiesLongerThan24h();
-		determineSchedule();
+        if(status != 3){
+            determineSchedule();
+        }    
     }
 
     /**
