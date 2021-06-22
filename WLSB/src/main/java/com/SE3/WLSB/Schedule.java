@@ -2,6 +2,8 @@ package com.SE3.WLSB;
 
 import java.time.Duration;
 
+import org.springframework.beans.factory.annotation.Value;
+
 /**
  * Class to model a schedule, objects cannot be changed
  * <br>
@@ -14,26 +16,51 @@ import java.time.Duration;
 
 public class Schedule {
     /**Constants to determine schedule*/
-    private final Duration breaks = Duration.ofMinutes(45);
-    private final Duration napDuration = Duration.ofMinutes(20);
-    private final int hoursOfSleepOver21 = 7;
-    private final int hoursOfSleepUnder21 = 8;
-    private final String wakeUpString = "wakeup";
-    private final String morningWorkString = "morningWork";
-    private final String afternoonWorkString = "afternoonWork";
-    private final String eveningWorkString = "eveningWork";
-    private final String morningFreetimeString = "morningFreetime";
-    private final String afternoonFreetimeString = "afternoonFreetime";
-    private final String eveningFreetimeString = "eveningFreetime";
-    private final String lunchString = "lunch";
-    private final String dinnerString = "dinner";
-    private final String napString = "nap";
-    private final String sleepString = "sleep";
+    @Value("${schedule.input.breakDurationInMinutes}")
+    private int breakDurationInMinutes;
+    @Value("${schedule.input.napDurationInMinutes}")
+    private int napDurationInMinutes;
+    @Value("${schedule.input.hoursOfSleepOver21}")
+    private int hoursOfSleepOver21;
+    @Value("${schedule.input.hoursOfSleepUnder21}")
+    private int hoursOfSleepUnder21;
+    @Value("${schedule.input.morningWorkWithBreakfastInHours}")
+    private int morningWorkWithBreakfastInHours;
+    @Value("${schedule.input.morningWorkWithoutBreakfastInHours}")
+    private int morningWorkWithoutBreakfastInHours;
+    @Value("${schedule.input.durationBetweenLunchAndDinnerInHours}")
+    private int durationBetweenLunchAndDinnerInHours;
+
+    @Value("${schedule.ouput.wakeUp}")
+    private String wakeUpString;
+    @Value("${schedule.ouput.morningWork}")
+    private String morningWorkString;
+    @Value("${schedule.ouput.afternoonWork}")
+    private String afternoonWorkString;
+    @Value("${schedule.ouput.eveningWork}")
+    private String eveningWorkString;
+    @Value("${schedule.ouput.morningFreetime}")
+    private String morningFreetimeString;
+    @Value("${schedule.ouput.afternoonFreetime}")
+    private String afternoonFreetimeString;
+    @Value("${schedule.ouput.eveningFreetime}")
+    private String eveningFreetimeString;
+    @Value("${schedule.ouput.lunch}")
+    private String lunchString;
+    @Value("${schedule.ouput.dinner}")
+    private String dinnerString;
+    @Value("${schedule.ouput.nap}")
+    private String napString;
+    @Value("${schedule.ouput.sleep}")
+    private String sleepString;
+
+    private Duration breaks = Duration.ofMinutes(breakDurationInMinutes);
+    private Duration napDuration = Duration.ofMinutes(napDurationInMinutes);
     
     /**Status of schedule object*/
     int status;
 
-    /**Input Params*/
+    /**Input Params from user*/
     private boolean nap;
     private int age;
     private boolean breakfast;
@@ -73,9 +100,7 @@ public class Schedule {
 	    this.workingHours = TimeParser.stringToDuration(workingHours);
 		determineSleepDuration();
         checkIfActivitiesLongerThan24h();
-        if(status != 3){
-            determineSchedule();
-        }    
+        determineSchedule();    
     }
 
     /**
@@ -138,6 +163,9 @@ public class Schedule {
     * determines a schedule and sets the attributes of the object to correct times
     */
     private void determineSchedule(){
+        if(status == 3){
+            return;
+        }
         Duration remainingWorkingHours = workingHours;
         determineMorningWork(remainingWorkingHours);
 		determineLunchBreak();
@@ -202,13 +230,13 @@ public class Schedule {
 		}
 		else {
             afternoonWork = Duration.ofSeconds(afternoon.getSeconds());
-		    if (remainingWorkingHours.compareTo(Duration.ofHours(5)) <= 0){
-                if (remainingWorkingHours.compareTo(Duration.ofHours(5)) < 0){
+		    if (remainingWorkingHours.compareTo(Duration.ofHours(durationBetweenLunchAndDinnerInHours)) <= 0){
+                if (remainingWorkingHours.compareTo(Duration.ofHours(durationBetweenLunchAndDinnerInHours)) < 0){
                     afternoonFreetime = afternoon.plus(remainingWorkingHours);
                 }
 			    remainingWorkingHours = Duration.ZERO;
 			}else {
-                remainingWorkingHours = remainingWorkingHours.minus(Duration.ofHours(5));
+                remainingWorkingHours = remainingWorkingHours.minus(Duration.ofHours(durationBetweenLunchAndDinnerInHours));
             }
 		}
         return remainingWorkingHours;
@@ -223,15 +251,15 @@ public class Schedule {
     }
 
     private void determineDinner(Duration afternoon) {
-        dinner = afternoon.plus(Duration.ofHours(5));
+        dinner = afternoon.plus(Duration.ofHours(durationBetweenLunchAndDinnerInHours));
     }
 
     private void determineLunchBreak() {
         if (breakfast){
-			lunchBreak = morningWork.plus(Duration.ofHours(4));
+			lunchBreak = morningWork.plus(Duration.ofHours(morningWorkWithBreakfastInHours));
 		}
 		else{
-			lunchBreak = morningWork.plus(Duration.ofHours(3));
+			lunchBreak = morningWork.plus(Duration.ofHours(morningWorkWithoutBreakfastInHours));
 		}
 
 		if (lunchBreak.compareTo(Duration.ofHours(11)) <= 0){	// essen zu früh, dann frühestens 11:30 Mittag
