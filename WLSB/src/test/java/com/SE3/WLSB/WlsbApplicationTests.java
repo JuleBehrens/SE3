@@ -48,8 +48,15 @@ public class WlsbApplicationTests {
 	 * Tests a valid input for /api/schedule
 	 */
 	@ParameterizedTest
-	@ValueSource(strings = {"?nap=true&age=22&breakfast=true&wakeUpTime=08:00&getReadyDuration=01:00&workingHours=07:00"}) // six numbers
-	public void getSchedule(String params) {
+	@ValueSource(strings = {"?nap=true&age=22&breakfast=true&wakeUpTime=05:50&getReadyDuration=01:00&workingHours=07:00",
+							"?nap=false&age=15&breakfast=true&wakeUpTime=10:00&getReadyDuration=00:30&workingHours=06:00",
+							"?nap=true&age=63&breakfast=false&wakeUpTime=08:00&getReadyDuration=03:00&workingHours=07:00",
+							"?nap=false&age=100&breakfast=false&wakeUpTime=07:00&getReadyDuration=00:20&workingHours=04:00",
+							"?nap=true&age=1&breakfast=true&wakeUpTime=11:00&getReadyDuration=01:00&workingHours=07:00",
+							"?nap=true&age=21&breakfast=true&wakeUpTime=09:00&getReadyDuration=02:00&workingHours=12:00",
+							"?nap=false&age=22&breakfast=falsee&wakeUpTime=06:00&getReadyDuration=00:10&workingHours=00:00"}) // six numbers
+	
+							public void getSchedule(String params) {
 		String url = localhost + port + "/api/schedule" + params;
 		String answerString = this.restTemplate.getForObject(url, String.class);
 		assertThat(answerString).contains("status", "\"1\"", "schedule");
