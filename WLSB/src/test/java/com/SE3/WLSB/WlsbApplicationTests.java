@@ -54,7 +54,7 @@ public class WlsbApplicationTests {
 							"?nap=false&age=100&breakfast=false&wakeUpTime=07:00&getReadyDuration=00:20&workingHours=04:00",
 							"?nap=true&age=1&breakfast=true&wakeUpTime=11:00&getReadyDuration=01:00&workingHours=07:00",
 							"?nap=true&age=21&breakfast=true&wakeUpTime=09:00&getReadyDuration=02:00&workingHours=12:00",
-							"?nap=false&age=22&breakfast=falsee&wakeUpTime=06:00&getReadyDuration=00:10&workingHours=00:00"}) // six numbers
+							"?nap=false&age=22&breakfast=false&wakeUpTime=06:00&getReadyDuration=00:10&workingHours=00:00"}) // six numbers
 	
 							public void getSchedule(String params) {
 		String url = localhost + port + "/api/schedule" + params;

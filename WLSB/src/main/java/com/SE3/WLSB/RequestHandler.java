@@ -1,5 +1,8 @@
 package com.SE3.WLSB;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -10,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class RequestHandler {
+
+	@Autowired
+	private AppProperties properties;
     /**
      * API entry point
      * @return links to navigate through api
@@ -38,9 +44,9 @@ public class RequestHandler {
 							@RequestParam(value = "wakeUpTime") String wakeUpTime,
 							@RequestParam(value = "getReadyDuration") String getReadyDuration,
 							@RequestParam(value = "workingHours") String workingHours) {
-		
-		Schedule schedule = new Schedule(nap, age, breakfast, wakeUpTime, getReadyDuration, workingHours);
-		
-		return String.format("{\"status\":\"%s\",\"schedule\":[%s],\"_links\":{\"self\":\"/api/schedule\"}}", ""+schedule.getStatus(), schedule.toString());
+
+		Schedule schedule = new Schedule(properties, nap, age, breakfast, wakeUpTime, getReadyDuration, workingHours);
+		int status = schedule.determineSchedule();
+		return String.format("{\"status\":\"%s\",\"schedule\":[%s],\"_links\":{\"self\":\"/api/schedule\"}}", ""+status, schedule.toString());
 	}
 }

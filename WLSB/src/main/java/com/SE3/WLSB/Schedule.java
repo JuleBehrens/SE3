@@ -2,7 +2,8 @@ package com.SE3.WLSB;
 
 import java.time.Duration;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 /**
  * Class to model a schedule, objects cannot be changed
@@ -16,46 +17,10 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class Schedule {
     /**Constants to determine schedule*/
-    @Value("${schedule.input.breakDurationInMinutes}")
-    private int breakDurationInMinutes;
-    @Value("${schedule.input.napDurationInMinutes}")
-    private int napDurationInMinutes;
-    @Value("${schedule.input.hoursOfSleepOver21}")
-    private int hoursOfSleepOver21;
-    @Value("${schedule.input.hoursOfSleepUnder21}")
-    private int hoursOfSleepUnder21;
-    @Value("${schedule.input.morningWorkWithBreakfastInHours}")
-    private int morningWorkWithBreakfastInHours;
-    @Value("${schedule.input.morningWorkWithoutBreakfastInHours}")
-    private int morningWorkWithoutBreakfastInHours;
-    @Value("${schedule.input.durationBetweenLunchAndDinnerInHours}")
-    private int durationBetweenLunchAndDinnerInHours;
+    AppProperties properties;
 
-    @Value("${schedule.ouput.wakeUp}")
-    private String wakeUpString;
-    @Value("${schedule.ouput.morningWork}")
-    private String morningWorkString;
-    @Value("${schedule.ouput.afternoonWork}")
-    private String afternoonWorkString;
-    @Value("${schedule.ouput.eveningWork}")
-    private String eveningWorkString;
-    @Value("${schedule.ouput.morningFreetime}")
-    private String morningFreetimeString;
-    @Value("${schedule.ouput.afternoonFreetime}")
-    private String afternoonFreetimeString;
-    @Value("${schedule.ouput.eveningFreetime}")
-    private String eveningFreetimeString;
-    @Value("${schedule.ouput.lunch}")
-    private String lunchString;
-    @Value("${schedule.ouput.dinner}")
-    private String dinnerString;
-    @Value("${schedule.ouput.nap}")
-    private String napString;
-    @Value("${schedule.ouput.sleep}")
-    private String sleepString;
-
-    private Duration breaks = Duration.ofMinutes(breakDurationInMinutes);
-    private Duration napDuration = Duration.ofMinutes(napDurationInMinutes);
+    private Duration breaks;
+    private Duration napDuration;
     
     /**Status of schedule object*/
     int status;
@@ -81,8 +46,9 @@ public class Schedule {
     private Duration eveningFreetime;
     private Duration goToBed;
 
+
     /**
-     * Only constructor, triggers validation of input {@link #checkIfActivitiesLongerThan24h()} and determination {@link #determineSchedule()} of schedule and sleeptime {@link #determineSleepDuration()}
+     * Only constructor
      * @param nap boolean, true if a nap should be scheduled
 	 * @param age int, age of the person of the 
 	 * @param breakfast boolean, true if the person eats breakfast
@@ -90,17 +56,17 @@ public class Schedule {
 	 * @param getReadyDuration String (Format: "HH:mm"), Duration how long the persons needs for morning routine (Breakfast, hygiene, clothing etc.)
 	 * @param workingHours String (Format: "HH:mm"), Duration how long the person has to work on an average day
      */
-    public Schedule(boolean nap, int age, boolean breakfast, String wakeUpTime, String morningRoutine, String workingHours){
+    public Schedule(AppProperties properties, boolean nap, int age, boolean breakfast, String wakeUpTime, String morningRoutine, String workingHours){
 		this.status = 1;
+        this.properties = properties;
         this.nap = nap;
         this.age = age;
         this.breakfast = breakfast;
         this.wakeUpTime = TimeParser.stringToDuration(wakeUpTime);
 		this.morningRoutine = TimeParser.stringToDuration(morningRoutine);
 	    this.workingHours = TimeParser.stringToDuration(workingHours);
-		determineSleepDuration();
-        checkIfActivitiesLongerThan24h();
-        determineSchedule();    
+        this.breaks = Duration.ofMinutes(properties.breakDurationInMinutes);
+        this.napDuration = Duration.ofMinutes(properties.napDurationInMinutes); 
     }
 
     /**
@@ -121,10 +87,10 @@ public class Schedule {
      */
     private void determineSleepDuration() {
 		if (age > 21) {
-			sleep = Duration.ofHours(hoursOfSleepOver21);
+			sleep = Duration.ofHours(properties.hoursOfSleepOver21);
 		}
 		else {
-			sleep = Duration.ofHours(hoursOfSleepUnder21);
+			sleep = Duration.ofHours(properties.hoursOfSleepUnder21);
 		}
 	}	
 
@@ -134,17 +100,17 @@ public class Schedule {
     public String toString(){
         String schedule = "";
         if(status < 3){
-            schedule = addDurationToSchedule(schedule, wakeUpString, wakeUpTime);
-            schedule = addDurationToSchedule(schedule, morningWorkString, morningWork);
-            schedule = addDurationToSchedule(schedule, morningFreetimeString, morningFreetime);
-            schedule = addDurationToSchedule(schedule, lunchString, lunchBreak);
-			schedule = addDurationToSchedule(schedule, napString, napTime);
-            schedule = addDurationToSchedule(schedule, afternoonWorkString, afternoonWork);
-            schedule = addDurationToSchedule(schedule, afternoonFreetimeString, afternoonFreetime);
-            schedule = addDurationToSchedule(schedule, dinnerString, dinner);
-            schedule = addDurationToSchedule(schedule, eveningWorkString, eveningWork);
-            schedule = addDurationToSchedule(schedule, eveningFreetimeString, eveningFreetime);
-            schedule = addDurationToSchedule(schedule, sleepString, goToBed);
+            schedule = addDurationToSchedule(schedule, properties.wakeUpString, wakeUpTime);
+            schedule = addDurationToSchedule(schedule, properties.morningWorkString, morningWork);
+            schedule = addDurationToSchedule(schedule, properties.morningFreetimeString, morningFreetime);
+            schedule = addDurationToSchedule(schedule, properties.lunchString, lunchBreak);
+			schedule = addDurationToSchedule(schedule, properties.napString, napTime);
+            schedule = addDurationToSchedule(schedule, properties.afternoonWorkString, afternoonWork);
+            schedule = addDurationToSchedule(schedule, properties.afternoonFreetimeString, afternoonFreetime);
+            schedule = addDurationToSchedule(schedule, properties.dinnerString, dinner);
+            schedule = addDurationToSchedule(schedule, properties.eveningWorkString, eveningWork);
+            schedule = addDurationToSchedule(schedule, properties.eveningFreetimeString, eveningFreetime);
+            schedule = addDurationToSchedule(schedule, properties.sleepString, goToBed);
             return schedule.substring(0, schedule.length()-1);
         }else {
             return "Schedule not possible";
@@ -162,9 +128,11 @@ public class Schedule {
     /**
     * determines a schedule and sets the attributes of the object to correct times
     */
-    private void determineSchedule(){
+    public int determineSchedule(){
+        determineSleepDuration();
+        checkIfActivitiesLongerThan24h();
         if(status == 3){
-            return;
+            return status;
         }
         Duration remainingWorkingHours = workingHours;
         determineMorningWork(remainingWorkingHours);
@@ -176,10 +144,11 @@ public class Schedule {
 		remainingWorkingHours = determineAfternoonActivities(remainingWorkingHours, afternoon);
 		Duration sleeptime = wakeUpTime.minus(sleep).plus(Duration.ofHours(24));
         determineEveningActivities(remainingWorkingHours, sleeptime);
+        return status;
     }
 
     private Duration determineMorningFreetime(Duration remainingWorkingHours) {
-        if (lunchBreak.minus(morningWork).compareTo(remainingWorkingHours) > 0){
+        if (lunchBreak.minus(wakeUpTime.plus(morningRoutine)).compareTo(remainingWorkingHours) > 0){
             if(morningFreetime == null){
                 morningFreetime = morningWork.plus(remainingWorkingHours);
             }
@@ -187,7 +156,7 @@ public class Schedule {
 		}
 		else {
             morningFreetime = null;
-			remainingWorkingHours = remainingWorkingHours.minus(lunchBreak.minus(morningWork));
+			remainingWorkingHours = remainingWorkingHours.minus(lunchBreak.minus(wakeUpTime.plus(morningRoutine)));
 		}
         return remainingWorkingHours;
     }
@@ -230,13 +199,13 @@ public class Schedule {
 		}
 		else {
             afternoonWork = Duration.ofSeconds(afternoon.getSeconds());
-		    if (remainingWorkingHours.compareTo(Duration.ofHours(durationBetweenLunchAndDinnerInHours)) <= 0){
-                if (remainingWorkingHours.compareTo(Duration.ofHours(durationBetweenLunchAndDinnerInHours)) < 0){
+		    if (remainingWorkingHours.compareTo(Duration.ofHours(properties.durationBetweenLunchAndDinnerInHours)) <= 0){
+                if (remainingWorkingHours.compareTo(Duration.ofHours(properties.durationBetweenLunchAndDinnerInHours)) < 0){
                     afternoonFreetime = afternoon.plus(remainingWorkingHours);
                 }
 			    remainingWorkingHours = Duration.ZERO;
 			}else {
-                remainingWorkingHours = remainingWorkingHours.minus(Duration.ofHours(durationBetweenLunchAndDinnerInHours));
+                remainingWorkingHours = remainingWorkingHours.minus(Duration.ofHours(properties.durationBetweenLunchAndDinnerInHours));
             }
 		}
         return remainingWorkingHours;
@@ -251,15 +220,16 @@ public class Schedule {
     }
 
     private void determineDinner(Duration afternoon) {
-        dinner = afternoon.plus(Duration.ofHours(durationBetweenLunchAndDinnerInHours));
+        dinner = afternoon.plus(Duration.ofHours(properties.durationBetweenLunchAndDinnerInHours));
     }
 
     private void determineLunchBreak() {
+        Duration morning = wakeUpTime.plus(morningRoutine);
         if (breakfast){
-			lunchBreak = morningWork.plus(Duration.ofHours(morningWorkWithBreakfastInHours));
+			lunchBreak = morning.plus(Duration.ofHours(properties.morningWorkWithBreakfastInHours));
 		}
 		else{
-			lunchBreak = morningWork.plus(Duration.ofHours(morningWorkWithoutBreakfastInHours));
+			lunchBreak = morning.plus(Duration.ofHours(properties.morningWorkWithoutBreakfastInHours));
 		}
 
 		if (lunchBreak.compareTo(Duration.ofHours(11)) <= 0){	// essen zu früh, dann frühestens 11:30 Mittag
@@ -272,7 +242,6 @@ public class Schedule {
 
     private void determineMorningWork(Duration remainingWorkingHours) {
         if(remainingWorkingHours.isZero()){
-            morningWork = null;
             morningFreetime = wakeUpTime.plus(morningRoutine);
         }
         else {
