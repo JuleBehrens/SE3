@@ -2,8 +2,6 @@ package com.SE3.WLSB;
 
 import java.time.Duration;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 
 /**
  * Class to model a schedule, objects cannot be changed
